@@ -1,0 +1,52 @@
+<!DOCTYPE  html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Powers of 2</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css">
+    </head>
+    <body>
+        <div class="game-container">
+            <div class="game-status">
+                <div class="score">0</div>
+                <div class="pause">|&nbsp;|</div>
+            </div>
+            <div class="game-new">
+                <p class="message">New Game</p>
+                <div class="action-container">
+                    <div class="mode easy" data-mode="3">
+                        <div class="text">Easy</div>
+                        <div class="power">2<sup>4</sup></div>
+                    </div>
+                    <div class="mode normal" data-mode="4">
+                        <div class="text">Normal</div>
+                        <div class="power">2<sup>5</sup></div>
+                    </div>
+                    <div class="mode hard" data-mode="5">
+                        <div class="text">Hard</div>
+                        <div class="power">2<sup>6</sup></div>
+                    </div>
+                </div>
+            </div>
+            <div class="game-pause" style="display:none;">
+                <p class="message">Pause</p>
+                <div class="action-container">
+                    <div id="continue-game">Continue</div>
+                    <div id="new-game">New Game</div>
+                </div>
+            </div>
+            <div class="grid-container"></div>
+            <div class="tile-container">
+                <div id="next-tile" class="tile">
+                    <div class="tile-inner">2</div>
+                </div>
+            </div>
+        </div>
+        <script src="js/classlist.js"></script>
+        <script src="js/xy.js"></script>
+        <script src="js/game.js"></script>
+        <script>new Game.App();</script>
+    </body>
+</html>
