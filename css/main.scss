@@ -1,0 +1,203 @@
+@import "fonts/clear-sans.css";
+@import "bourbon/bourbon";
+
+@mixin border-radius($radius) {
+  -webkit-border-radius: $radius;
+     -moz-border-radius: $radius;
+      -ms-border-radius: $radius;
+          border-radius: $radius;
+}
+
+
+$cell: 50px;
+$padding: 5px;
+$row: 10;    // rows of grid
+$column: 6;   // columns of grid
+
+$width: $column * $cell + ($column - 1) * $padding;
+$height: $row * $cell + ($row - 1) * $padding;
+
+html, body {
+    color: #776e65;
+    font-family: "Clear Sans","Helvetica Neue",Arial,sans-serif;
+}
+.game-container {
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    padding: 5px;
+    cursor: default;
+    -webkit-touch-callout: none;
+    @include user-select(none);
+    background: #bbada0;
+    @include border-radius(6px);
+    width: $width + 2 * $padding;
+    height: $height + 2 * $padding;
+    @include box-sizing(border-box);
+}
+.game-status {
+    position: absolute;
+    z-index: 10;
+    color: floralwhite;
+    text-align: center;
+    width: $width;
+    
+    .score {
+        margin-top: 15px;
+        font-size: 20px;
+        line-height: 20px;
+    }
+    
+    .pause {
+        font-weight: bolder;
+        position: absolute;
+        right: 15px;
+        top: 12px;
+        cursor: pointer;
+    }
+}
+.game-new, .game-pause {
+    position: absolute;
+    background: none repeat scroll 0 0 rgba(238, 228, 218, 0.5);
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+    z-index: 99;
+    
+    .message {
+        font-size: 48px;
+        font-weight: bold;
+        line-height: 48px;
+        margin-top: 100px;
+        margin-bottom: 40px;
+        text-align: center;
+    }
+}
+.action-container > div {
+    width: 60%;
+    margin: 5px auto;
+    padding: 5px 10px;
+    font-size: 32px;
+    color: antiquewhite;
+    border-radius: 6px;
+    cursor: pointer;
+    .game-pause & {
+        text-align: center;
+    }
+}
+div#continue-game,
+.mode.easy {
+    background-color: #7BC032;
+}
+.mode.normal {
+    background-color: #F1B139;
+}
+div#new-game,
+.mode.hard {
+    background-color: #E2364A;
+}
+.mode div {
+    display: inline-block;
+    text-transform: uppercase;
+    &.power {
+        width: 50px;
+        float: right;
+        text-align: right;
+    }
+}
+.grid-container {
+    position: absolute;
+    z-index: 1;
+}
+.grid-column {
+    margin-right: $padding;
+    width: $cell;
+    float: left;
+    :last-child {
+        margin-right: 0;
+    }
+    :after {
+        content: "";
+        display: block;
+        clear: both;
+    }
+}
+.grid-cell {
+    width: $cell;
+    height: $cell;
+    margin-bottom: $padding;
+    @include border-radius(3px);
+    background: rgba(238, 228, 218, 0.35);
+    :last-child {
+        margin-bottom: 0;
+    }
+}
+.tile-container {
+    position: relative;
+    z-index: 2;
+    width: $width;
+    height: $height;
+}
+.tile, .tile .tile-inner {
+    width: $cell;
+    height: $cell;
+    line-height: $cell;
+}
+.tile {
+    position: absolute;
+    @include transition(100ms ease-in-out);
+    @include transition-property(transform);
+}
+.tile .tile-inner {
+    @include border-radius(3px);
+    background: #eee4da;
+    text-align: center;
+    font-weight: bold;
+    z-index: 10;
+    font-size: 25px;
+}
+
+// animation
+@include keyframes(pulse) { // for merge
+    0% {
+        @include transform(scale(1));
+    }
+    50% {
+        @include transform(scale(1.1));
+    }
+    100% {
+        @include transform(scale(1));
+    }
+}
+@include keyframes(appear) { // for new
+    0% {
+        opacity: 0;
+        @include transform(scale(0));
+    }
+    100% {
+        opacity: 1;
+        @include transform(scale(1));
+    }
+}
+@include keyframes(fadeOutUp) { // for remove
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        @include transform(translate3d(0, -100%, 0));
+    }
+}
+.tile-merged .tile-inner {
+    @include animation(pulse  100ms ease 100ms);
+    @include animation-fill-mode(backwards);
+}
+.tile-new .tile-inner {
+    @include animation(appear 200ms ease 100ms);
+    @include animation-fill-mode(backwards);
+}
+.tile-removed .tile-inner {
+    @include animation(fadeOutUp  100ms ease 100ms);
+    @include animation-fill-mode(backwards);
+}

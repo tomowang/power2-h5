@@ -108,14 +108,6 @@ Game.Engine = function () {
     this.pauseContainer = document.querySelector('.game-pause');
     this.nextTileElem = document.getElementById("next-tile");
     this.scoreContainer = document.querySelector('.score');
-
-    var width = Game.COLUMN * Game.CELL + (Game.COLUMN - 1) * Game.PADDING,
-        height = Game.ROW * Game.CELL + (Game.ROW - 1) * Game.PADDING;
-    this.tileContainer.style.width = width + 'px';
-    this.tileContainer.style.height = height + 'px';
-    this.gameContainer.style.width = (width + 2 * Game.PADDING) + 'px';
-    this.gameContainer.style.height = (height + 2 * Game.PADDING) + 'px';
-    document.querySelector(".game-status").style.width = width + 'px';
     
     window.addEventListener("keydown", this);
     document.querySelector(".pause").addEventListener("click", function () {
