@@ -1,3 +1,5 @@
+/*global console, document, window, navigator, XY */
+
 "use strict";
 var random = function (min, max) {
     if (max == null) {
@@ -77,7 +79,7 @@ Game.Tile.prototype.build = function () {
     this._position();
 };
 Game.Tile.prototype.fits = function (grid) {
-    var xy = this.xy
+    var xy = this.xy;
     if (xy.x < 0 || xy.x >= Game.COLUMN) return false;
     if (xy.y < 0) return false;
     if (grid.cells[xy.x][xy.y]) return false;
@@ -169,7 +171,7 @@ Game.Engine.prototype.handleEvent = function (e) {
 			this.drop();
             break;
 	}
-}
+};
 Game.Engine.prototype.nextTile = function () {
     if (!this.nextValue) {
         this.nextValue = this.availablePowers.ranPick();
@@ -205,7 +207,7 @@ Game.Engine.prototype.shift = function (direction) {
 	this.tile.xy = this.tile.xy.plus(xy);
 	if (!this.tile.fits(this.grid)) { this.tile.xy = this.tile.xy.minus(xy); }
 	return this;
-}
+};
 Game.Engine.prototype.merge = function (x) {
     var _that = this, interval = 200,
         cell_a, cell_b, cell_new, merged = false,
@@ -348,6 +350,6 @@ Object.defineProperty(Game.Engine.prototype, "score", {
 });
 
 // main entry
-Game.App = function (mode) {
+Game.App = function () {
     this._engine = new Game.Engine();
 };
