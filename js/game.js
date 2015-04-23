@@ -100,6 +100,22 @@ Object.defineProperty(Game.Tile.prototype, "xy", {
 	}
 });
 
+var gestures = new (function () {
+    if (window.navigator.msPointerEnabled) {
+        //Internet Explorer 10 style
+        this.ms = true;
+        this.touchstart = "MSPointerDown";
+        this.touchmove  = "MSPointerMove";
+        this.touchend   = "MSPointerUp";
+    } else {
+        this.ms = false;
+        this.touchstart = "touchstart";
+        this.touchmove  = "touchmove";
+        this.touchend   = "touchend";
+    }
+    this.threshold = 10; // threshold for swipe delta
+})();
+
 Game.Engine = function () {
     var _that = this;
     this.grid = new Game.Grid(Game.ROW, Game.COLUMN);
@@ -113,6 +129,45 @@ Game.Engine = function () {
     
     // get the real cell width for different media screen
     Game.CELL = (this.tileContainer.offsetWidth + Game.PADDING) / Game.COLUMN - Game.PADDING;
+    
+    // mobile touch events: swipedown & tap
+    var touchStart = [0, 0], touchEnd;
+    this.tileContainer.addEventListener(gestures.touchstart, function (e) {
+        if ((!gestures.ms && e.touches.length > 1) || e.targetTouches > 1) {
+            return; // Ignore if touching with more than 1 finger
+        }
+
+        if (gestures.ms) {
+            touchStart = [e.pageX, e.pageY];
+        } else {
+            touchStart = [e.touches[0].clientX, e.touches[0].clientY];
+        }
+
+        e.preventDefault();
+    });
+    this.tileContainer.addEventListener(gestures.touchmove, function (e) {
+        e.preventDefault();
+    });
+    this.tileContainer.addEventListener(gestures.touchend, function (e) {
+        if ((!gestures.ms && e.touches.length > 1) || e.targetTouches > 1) {
+            return; // Ignore if touching with more than 1 finger
+        }
+
+        if (gestures.ms) {
+            touchEnd = [e.pageX, e.pageY];
+        } else {
+            touchEnd = [e.changedTouches[0].clientX, e.changedTouches[0].clientY];
+        }
+
+        var dx = Math.abs(touchEnd[0] - touchStart[0]);
+        var dy = touchEnd[1] - touchStart[1];
+
+        if (dy > gestures.threshold && dx < dy) { // swipe down
+            _that.drop()
+        } else if (dx === dy && dx === 0) { // tap
+            _that.tap(touchEnd[0]);
+        }
+    });
     
     window.addEventListener("keydown", this);
     document.querySelector(".pause").addEventListener("click", function () {
@@ -204,6 +259,16 @@ Game.Engine.prototype.drop = function (rows) {
     this._drop(this.tile.xy.x);
     return this;
 };
+Game.Engine.prototype.tap = function (x) {
+    if (!this.tile || this._processing) { return; }
+    var offsetX = this.gameContainer.offsetLeft,
+        column = 0, offset = 0;
+    column = Math.floor((x - offsetX) / (Game.CELL + Game.PADDING));
+    if (column < 0 || column > Game.COLUMN - 1) { return; }
+    offset = column - this.tile.xy.x;
+    if (offset === 0) { return; }
+    this.shift(offset);
+}
 Game.Engine.prototype.shift = function (direction) {
 	if (!this.tile || this._processing) { return; }
 	var xy = new XY(direction, 0);
