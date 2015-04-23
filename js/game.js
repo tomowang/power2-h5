@@ -111,6 +111,9 @@ Game.Engine = function () {
     this.nextTileElem = document.getElementById("next-tile");
     this.scoreContainer = document.querySelector('.score');
     
+    // get the real cell width for different media screen
+    Game.CELL = (this.tileContainer.offsetWidth + Game.PADDING) / Game.COLUMN - Game.PADDING;
+    
     window.addEventListener("keydown", this);
     document.querySelector(".pause").addEventListener("click", function () {
         _that.pause();
@@ -353,3 +356,5 @@ Object.defineProperty(Game.Engine.prototype, "score", {
 Game.App = function () {
     this._engine = new Game.Engine();
 };
+
+new Game.App();

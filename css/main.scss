@@ -59,82 +59,76 @@ html, body {
     font-family: "Clear Sans","Helvetica Neue",Arial,sans-serif;
 }
 
-// Game field mixin used to render CSS at different width
-@mixin game-field($cell, $padding, $width, $height) {
-    .game-container {
-        margin-left: auto;
-        margin-right: auto;
-        position: relative;
-        padding: 5px;
-        cursor: default;
-        -webkit-touch-callout: none;
-        -ms-touch-callout: none;
-        @include user-select(none);
-        background: #bbada0;
-        @include border-radius($tile-border-radius * 2);
-        width: $width + 2 * $padding;
-        height: $height + 2 * $padding;
-        box-sizing: border-box;
+.game-container {
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    padding: 5px;
+    cursor: default;
+    -webkit-touch-callout: none;
+    -ms-touch-callout: none;
+    @include user-select(none);
+    background: #bbada0;
+    @include border-radius($tile-border-radius * 2);
+    width: $width + 2 * $padding;
+    height: $height + 2 * $padding;
+    box-sizing: border-box;
+}
+.game-status {
+    position: absolute;
+    z-index: 10;
+    color: floralwhite;
+    text-align: center;
+    width: $width;
+    
+    .score {
+        margin-top: 15px;
+        font-size: 20px;
+        line-height: 20px;
     }
-    .game-status {
+    
+    .pause {
+        font-weight: bolder;
         position: absolute;
-        z-index: 10;
-        color: floralwhite;
-        text-align: center;
-        width: $width;
-        
-        .score {
-            margin-top: 15px;
-            font-size: 20px;
-            line-height: 20px;
-        }
-        
-        .pause {
-            font-weight: bolder;
-            position: absolute;
-            right: 15px;
-            top: 12px;
-            cursor: pointer;
-        }
-    }
-    .grid-column {
-        margin-right: $padding;
-        width: $cell;
-        float: left;
-        :last-child {
-            margin-right: 0;
-        }
-        :after {
-            content: "";
-            display: block;
-            clear: both;
-        }
-    }
-    .grid-cell {
-        width: $cell;
-        height: $cell;
-        margin-bottom: $padding;
-        @include border-radius($tile-border-radius);
-        background: rgba(238, 228, 218, 0.35);
-        :last-child {
-            margin-bottom: 0;
-        }
-    }
-    .tile-container {
-        position: relative;
-        z-index: 2;
-        width: $width;
-        height: $height;
-    }
-    .tile, .tile .tile-inner {
-        width: $cell;
-        height: $cell;
-        line-height: $cell;
+        right: 15px;
+        top: 12px;
+        cursor: pointer;
     }
 }
-// End of game-field mixin
-
-@include game-field($cell, $padding, $width, $height);
+.grid-column {
+    margin-right: $padding;
+    width: $cell;
+    float: left;
+    :last-child {
+        margin-right: 0;
+    }
+    :after {
+        content: "";
+        display: block;
+        clear: both;
+    }
+}
+.grid-cell {
+    width: $cell;
+    height: $cell;
+    margin-bottom: $padding;
+    @include border-radius($tile-border-radius);
+    background: rgba(238, 228, 218, 0.35);
+    :last-child {
+        margin-bottom: 0;
+    }
+}
+.tile-container {
+    position: relative;
+    z-index: 2;
+    width: $width;
+    height: $height;
+}
+.tile, .tile .tile-inner {
+    width: $cell;
+    height: $cell;
+    line-height: $cell;
+}
 
 .game-new, .game-pause {
     position: absolute;
@@ -327,5 +321,34 @@ html, body {
     $width: $column * $cell + ($column - 1) * $padding;
     $height: $row * $cell + ($row - 1) * $padding;
     
-    @include game-field($cell, $padding, $width, $height);
+    .game-container {
+        width: $width + 2 * $padding;
+        height: $height + 2 * $padding;
+    }
+    .game-status {
+        width: $width;
+    }
+    .grid-column {
+        margin-right: $padding;
+        width: $cell;
+    }
+    .grid-cell {
+        width: $cell;
+        height: $cell;
+        margin-bottom: $padding;
+    }
+    .tile-container {
+        width: $width;
+        height: $height;
+    }
+    .tile, .tile .tile-inner {
+        width: $cell;
+        height: $cell;
+        line-height: $cell;
+    }
+    
+    .game-status .pause {
+        right: 10px;
+        top: 10px;
+    }
 }
