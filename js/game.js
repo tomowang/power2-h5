@@ -16,11 +16,7 @@ var Game = {
     POWERS_2: [2, 4, 8, 16,
                 32, 64, 128, 256,
                 512, 1024, 2048, 4096],
-    MODE: {
-        EASY: 3,    // 16
-        NORMAL: 5,  // 64
-        HARD: 7     // 256
-    },
+    
     INIT_INTERVAL: 1000,
     SPEED_UP: 100, // ms
     CELL: 50,
@@ -163,7 +159,7 @@ Game.Engine = function () {
         var dy = touchEnd[1] - touchStart[1];
 
         if (dy > gestures.threshold && dx < dy) { // swipe down
-            _that.drop()
+            _that.drop();
         } else if (dx === dy && dx === 0) { // tap
             _that.tap(touchEnd[0]);
         }
@@ -182,7 +178,7 @@ Game.Engine = function () {
     });
     var i, modes = document.querySelectorAll(".mode");
     for (i = 0; i < modes.length; i++) {
-        modes[i].addEventListener("click", function (e) {
+        modes[i].addEventListener("click", function () {
             _that.newGameContainer.style.display = "none";
             _that.init(parseInt(this.dataset.mode, 10));
             _that.nextTile();
@@ -191,6 +187,9 @@ Game.Engine = function () {
     }
 };
 Game.Engine.prototype.init = function (mode) {
+    this.resetMessage(true);
+    this.gameover = false;
+    
     this.max = Game.POWERS_2[mode] * 2; // max merge value
     this.availablePowers = Game.POWERS_2.slice(0, mode + 1);
     
@@ -246,13 +245,16 @@ Game.Engine.prototype.levelUp = function () {
     this.level += 1;
     this.interval -= Game.SPEED_UP;
 };
-Game.Engine.prototype.drop = function (rows) {
-    if (!this.tile || this._processing) return;
+Game.Engine.prototype.drop = function () {
+    if (this.gameover || !this.tile || this._processing) return;
     var gravity = new XY(0, -1);
     while (this.tile.fits(this.grid)) {
         this.tile.xy = this.tile.xy.plus(gravity);
     }
     this.tile.xy = this.tile.xy.minus(gravity);
+    if (this.tile.xy.y >= Game.ROW - 1) {
+        return this.gameOver();
+    }
     this.grid.cells[this.tile.xy.x][this.tile.xy.y] = this.tile;
     
     this.stop();
@@ -260,7 +262,7 @@ Game.Engine.prototype.drop = function (rows) {
     return this;
 };
 Game.Engine.prototype.tap = function (x) {
-    if (!this.tile || this._processing) { return; }
+    if (this.gameover || !this.tile || this._processing) { return; }
     var offsetX = this.gameContainer.offsetLeft,
         column = 0, offset = 0;
     column = Math.floor((x - offsetX) / (Game.CELL + Game.PADDING));
@@ -268,9 +270,9 @@ Game.Engine.prototype.tap = function (x) {
     offset = column - this.tile.xy.x;
     if (offset === 0) { return; }
     this.shift(offset);
-}
+};
 Game.Engine.prototype.shift = function (direction) {
-	if (!this.tile || this._processing) { return; }
+	if (this.gameover || !this.tile || this._processing) { return; }
 	var xy = new XY(direction, 0);
 	this.tile.xy = this.tile.xy.plus(xy);
 	if (!this.tile.fits(this.grid)) { this.tile.xy = this.tile.xy.minus(xy); }
@@ -381,13 +383,14 @@ Game.Engine.prototype._tick = function () {
     if (!this.tile.fits(this.grid)) {
         this.tile.xy = this.tile.xy.minus(gravity);
         if (this.tile.xy.y >= Game.ROW - 1) {
-            console.log("game over");
+            return this.gameOver();
         }
         this.grid.cells[this.tile.xy.x][this.tile.xy.y] = this.tile;
         this._drop(this.tile.xy.x);
     }
 };
 Game.Engine.prototype.pause = function () {
+    if (this.gameover) return;
     if (this._interval) {
         clearInterval(this._interval);
         this._interval = null;
@@ -406,6 +409,23 @@ Game.Engine.prototype.start = function () {
     if (this._interval) { return; }
 	this._interval = setInterval(this._tick.bind(this), this.interval);
 };
+Game.Engine.prototype.gameOver = function () {
+    this.gameover = true;
+    this.stop();
+    this.resetMessage();
+    this.pauseContainer.style.display = "block";
+    return false;
+};
+Game.Engine.prototype.resetMessage = function (reset) {
+    var msgContainer = this.pauseContainer.querySelector('.message');
+    if (reset) { // reset to pause message
+        msgContainer.textContent = "Pause";
+        document.getElementById('continue-game').style.display = "block";
+    } else { // game over message
+        msgContainer.textContent = "Game Over";
+        document.getElementById('continue-game').style.display = "none";
+    }
+};
 
 Object.defineProperty(Game.Engine.prototype, "score", {
 	get: function () {
@@ -414,6 +434,7 @@ Object.defineProperty(Game.Engine.prototype, "score", {
 	set: function (score) {
 		this._score = score;
         this.scoreContainer.innerHTML = this._score + "";
+        this.pauseContainer.querySelector('.score').innerHTML = "score: " + this._score;
 	}
 });
 

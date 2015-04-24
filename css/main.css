@@ -90,11 +90,14 @@ html, body {
     font-weight: bold;
     line-height: 48px;
     margin-top: 100px;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
     text-align: center; }
     @media screen and (max-width: 355px) and (orientation: portrait) {
       .game-new .message, .game-pause .message {
         margin-top: 60px; } }
+  .game-new .score, .game-pause .score {
+    font-size: 20px;
+    text-align: center; }
 
 .action-container > div {
   width: 80%;
