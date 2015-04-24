@@ -92,8 +92,8 @@ html, body {
     .pause {
         font-weight: bolder;
         position: absolute;
-        right: 15px;
-        top: 12px;
+        right: 0;
+        top: 0;
         cursor: pointer;
     }
 }
@@ -126,7 +126,7 @@ html, body {
     width: $width;
     height: $height;
 }
-.tile, .tile .tile-inner {
+.tile, .tile .tile-inner, .game-status .pause {
     width: $cell;
     height: $cell;
     line-height: $cell;
@@ -348,14 +348,9 @@ html, body {
         width: $width;
         height: $height;
     }
-    .tile, .tile .tile-inner {
+    .tile, .tile .tile-inner, .game-status .pause {
         width: $cell;
         height: $cell;
         line-height: $cell;
-    }
-    
-    .game-status .pause {
-        right: 10px;
-        top: 10px;
     }
 }

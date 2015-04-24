@@ -39,8 +39,8 @@ html, body {
   .game-status .pause {
     font-weight: bolder;
     position: absolute;
-    right: 15px;
-    top: 12px;
+    right: 0;
+    top: 0;
     cursor: pointer; }
 
 .grid-column {
@@ -72,7 +72,7 @@ html, body {
   width: 325px;
   height: 545px; }
 
-.tile, .tile .tile-inner {
+.tile, .tile .tile-inner, .game-status .pause {
   width: 50px;
   height: 50px;
   line-height: 50px; }
@@ -342,13 +342,9 @@ html, body {
     width: 265px;
     height: 445px; }
 
-  .tile, .tile .tile-inner {
+  .tile, .tile .tile-inner, .game-status .pause {
     width: 40px;
     height: 40px;
-    line-height: 40px; }
-
-  .game-status .pause {
-    right: 10px;
-    top: 10px; } }
+    line-height: 40px; } }
 
 /*# sourceMappingURL=main.css.map */
