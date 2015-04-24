@@ -67,6 +67,8 @@ html, body {
     cursor: default;
     -webkit-touch-callout: none;
     -ms-touch-callout: none;
+    -ms-touch-action: none;
+    touch-action: none;
     @include user-select(none);
     background: #bbada0;
     @include border-radius($tile-border-radius * 2);

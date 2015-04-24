@@ -11,6 +11,8 @@ html, body {
   cursor: default;
   -webkit-touch-callout: none;
   -ms-touch-callout: none;
+  -ms-touch-action: none;
+  touch-action: none;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
