@@ -109,6 +109,9 @@ html, body {
         display: block;
         clear: both;
     }
+    &.highlight {
+        background-color: $tile-gold-color;
+    }
 }
 .grid-cell {
     width: $cell;

@@ -272,6 +272,7 @@ Game.Engine.prototype.tap = function (x) {
         column = 0, offset = 0;
     column = Math.floor((x - offsetX) / (Game.CELL + Game.PADDING));
     if (column < 0 || column > Game.COLUMN - 1) { return; }
+    this.highlightColumn(column);
     offset = column - this.tile.xy.x;
     if (offset === 0) { return; }
     this.shift(offset);
@@ -420,6 +421,15 @@ Game.Engine.prototype.gameOver = function () {
     this.resetMessage();
     this.pauseContainer.style.display = "block";
     return false;
+};
+Game.Engine.prototype.highlightColumn = function (index) {
+    var columns = document.querySelectorAll('.grid-column'), column = columns[index];
+    if (column && !column.classList.contains('highlight')) {
+        column.classList.add('highlight');
+        setTimeout(function () {
+            column.classList.remove('highlight');
+        }, 75);
+    }
 };
 Game.Engine.prototype.resetMessage = function (reset) {
     var msgContainer = this.pauseContainer.querySelector('.message');

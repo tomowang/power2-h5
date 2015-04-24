@@ -53,6 +53,8 @@ html, body {
     content: "";
     display: block;
     clear: both; }
+  .grid-column.highlight {
+    background-color: #edc22e; }
 
 .grid-cell {
   width: 50px;
