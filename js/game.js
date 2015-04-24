@@ -109,7 +109,12 @@ var gestures = new (function () {
         this.touchmove  = "touchmove";
         this.touchend   = "touchend";
     }
-    this.threshold = 10; // threshold for swipe delta
+    this.swpie = {
+        threshold: 10 // threshold for swipe down
+    };
+    this.tap = {
+        threshold: 2 // a minimal movement is ok
+    };
 })();
 
 Game.Engine = function () {
@@ -155,12 +160,12 @@ Game.Engine = function () {
             touchEnd = [e.changedTouches[0].clientX, e.changedTouches[0].clientY];
         }
 
-        var dx = Math.abs(touchEnd[0] - touchStart[0]);
-        var dy = touchEnd[1] - touchStart[1];
+        var dx = touchEnd[0] - touchStart[0], absDx = Math.abs(dx);
+        var dy = touchEnd[1] - touchStart[1], absDy = Math.abs(dy);
 
-        if (dy > gestures.threshold && dx < dy) { // swipe down
+        if (dy > gestures.swpie.threshold && absDx < absDy) { // swipe down
             _that.drop();
-        } else if (dx === dy && dx === 0) { // tap
+        } else if (absDx < gestures.tap.threshold && absDy < gestures.tap.threshold) { // tap
             _that.tap(touchEnd[0]);
         }
     });
